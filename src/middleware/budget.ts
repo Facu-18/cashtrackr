@@ -40,7 +40,7 @@ export const validateBudgetExists =  async (req: Request, res: Response, next: N
         next()
     }catch(error){
         console.log(error)
-        res.status(500).json({error: 'Error al crear el presupuesto'})
+        res.status(500).json({error: 'Hubo un error'})
     }
    
 }
@@ -56,5 +56,16 @@ export const validateBudgetInput =  async (req: Request, res: Response, next: Ne
         .custom(value => value > 0).withMessage('El presupuesto debe ser mayor a 0')
         .run(req)
         
+    next()
+}
+
+export function hasAccess(req: Request, res: Response, next: NextFunction){
+    
+    if(req.budget.userId != req.user.id){
+        const error = new Error('Accion no válida')
+        res.status(401).json({error: error.message})
+        return;
+    }
+
     next()
 }
