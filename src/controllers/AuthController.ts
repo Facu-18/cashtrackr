@@ -19,24 +19,18 @@ export class AuthController {
         }
         
         try{
-            const user = await User.create(req.body)
+            const user = new User(req.body)
             user.password = await hashPassword(password)
-            const token = generateToken()
-            user.token = token;
-            
-            if(process.env.NODE_ENV !== 'production'){
-                globalThis.cashtrackrConfirmationToken = token
-            }
-
+            user.token = generateToken()
             await user.save()
-            
+
             await AuthEmail.sendConfirmationEmail({
                 name: user.name,
                 email: user.email,
                 token: user.token
             })
 
-            res.status(201).json('Cuenta creada correctamente')   
+            res.json('Cuenta creada correctamente')   
         }catch (error){
             console.log(error)
             res.status(500).json({error : 'Hubo un error'})
