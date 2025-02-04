@@ -5,14 +5,14 @@ import { db } from './config/db'
 import budgetRouter from './routes/budgetRouter'
 import authRouter from './routes/authRouter'
 
-export async function connectDB() {
+async function connectDB() {
     try{
         await db.authenticate()
         db.sync()
-        // console.log(colors.blue.bold('Conexión exitosa a la BD'))
+        console.log(colors.blue.bold('Conexión exitosa a la BD'))
     }catch(error){
         //console.log(error)
-        // console.log(colors.red.bold('fallo la conexión a la BD'))
+        console.log(colors.red.bold('fallo la conexión a la BD'))
     }
 }
 
