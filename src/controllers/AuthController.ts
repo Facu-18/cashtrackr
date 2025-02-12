@@ -119,6 +119,8 @@ export class AuthController {
             res.status(404).json({error: error.message})
             return;
         }
+        
+        res.json('Token Válido')
 
     }
 
@@ -176,6 +178,26 @@ export class AuthController {
         }
 
        res.json('Contraseña correcta')
+    }
+
+    static updateUser = async (req: Request, res: Response) => {
+        const { name, email } = req.body
+        const { id } = req.user
+        const user = await User.findByPk(id)
+
+        try{
+            const userExist = await User.findOne({where: {email}})
+            if(userExist && userExist.id !== id){
+                const error = new Error('El correo ya esta registrado por otro usuario')
+                res.status(409).json({error: error.message})
+                return;
+            }
+
+            await user.update({email, name}, {where: {id}})
+            res.json('Perfil actualizado correctamente')
+        }catch(error){
+            console.log(error)
+        }
     }
 
 }
